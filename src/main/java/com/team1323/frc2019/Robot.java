@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package com.team708.1323Swerve;
+package com.team1323.frc2019;
 
 import java.util.Arrays;
 
@@ -34,16 +34,16 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-//import com.team1323.frc2019.auto.modes.CloseFarBallMode;
-//import com.team1323.frc2019.subsystems.BallCarriage;
-//import com.team1323.frc2019.subsystems.BallIntake;
-//import com.team1323.frc2019.subsystems.DiskIntake;
-//import com.team1323.frc2019.subsystems.DiskScorer;
-//import com.team1323.frc2019.subsystems.Elevator;
-//import com.team1323.frc2019.subsystems.Jacks;
-//import com.team1323.frc2019.subsystems.LEDs;
-//import com.team1323.frc2019.subsystems.Wrist;
-//import com.team1323.io.SwitchController;
+import com.team1323.frc2019.auto.modes.CloseFarBallMode;
+import com.team1323.frc2019.subsystems.BallCarriage;
+import com.team1323.frc2019.subsystems.BallIntake;
+import com.team1323.frc2019.subsystems.DiskIntake;
+import com.team1323.frc2019.subsystems.DiskScorer;
+// import com.team1323.frc2019.subsystems.Elevator;
+// import com.team1323.frc2019.subsystems.Jacks;
+// import com.team1323.frc2019.subsystems.LEDs;
+// import com.team1323.frc2019.subsystems.Wrist;
+import com.team1323.io.SwitchController;
 
 
 /**
@@ -56,10 +56,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	// private Elevator elevator;
 	// private Wrist wrist;
-	// private BallIntake ballIntake;
-	// private BallCarriage ballCarriage;
-	// private DiskIntake diskIntake;
-	// private DiskScorer diskScorer;
+	private BallIntake ballIntake;
+	private BallCarriage ballCarriage;
+	private DiskIntake diskIntake;
+	private DiskScorer diskScorer;
 	// private Jacks jacks;
 	// private LEDs leds;
 	
@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
 
 	private Xbox driver, coDriver;
 	
-	// private SwitchController switchController;
-	// private final boolean useSwitchController = false;
+	private SwitchController switchController;
+	private final boolean useSwitchController = false;
 
 	private final boolean oneControllerMode = false;
 	private boolean flickRotation = false;
@@ -100,26 +100,26 @@ public class Robot extends TimedRobot {
 		swerve = Swerve.getInstance();
 		// elevator = Elevator.getInstance();
 		// wrist = Wrist.getInstance();
-		// ballIntake = BallIntake.getInstance();
-		// ballCarriage = BallCarriage.getInstance();
-		// diskIntake = DiskIntake.getInstance();
-		// diskScorer = DiskScorer.getInstance();
+		ballIntake = BallIntake.getInstance();
+		ballCarriage = BallCarriage.getInstance();
+		diskIntake = DiskIntake.getInstance();
+		diskScorer = DiskScorer.getInstance();
 		// jacks = Jacks.getInstance();
 		// leds = LEDs.getInstance();
 		subsystems = new SubsystemManager(
 			// Arrays.asList(swerve, elevator, wrist, ballIntake, ballCarriage, diskIntake, diskScorer, jacks, leds, s));
-			   Arrays.asList(swerve, s));  // JNP
+			Arrays.asList(swerve, ballIntake, ballCarriage, diskIntake, diskScorer, s));
 
 		limelight = LimelightProcessor.getInstance();
 		
-		// if (useSwitchController) {
-		// 	switchController = new SwitchController(2);
-		// }
+		if (useSwitchController) {
+			switchController = new SwitchController(2);
+		}
 
 		driver   = new Xbox(0);
 		coDriver = new Xbox(1);
 
-		driver.setDeadband(0.15);  // 0.0  JNP
+		driver.setDeadband(0.0);
 
 		coDriver.setDeadband(0.4);
 		coDriver.rightBumper.setLongPressDuration(1.0);
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
 
 		generator.generateTrajectories();
 
-		// AutoModeBase auto = new CloseFarBallMode(true);
+		AutoModeBase auto = new CloseFarBallMode(true);
 		qTransmitter.addPaths(auto.getPaths());
 		System.out.println("Total path time: " + qTransmitter.getTotalPathTime(auto.getPaths()));
 
@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
 		subsystems.outputToSmartDashboard();
 		robotState.outputToSmartDashboard();
 		enabledLooper.outputToSmartDashboard();
-		//Pigeon.getInstance().outputToSmartDashboard();
+		// Pigeon.getInstance().outputToSmartDashboard();
 		SmartDashboard.putBoolean("Enabled", ds.isEnabled());
 		SmartDashboard.putNumber("Match time", ds.getMatchTime());
 	}
@@ -167,22 +167,22 @@ public class Robot extends TimedRobot {
 		swerve.requireModuleConfiguration();
 		//swerve.set10VoltRotationMode(true);
 
-		elevator.setCurrentLimit(40);
-		elevator.configForAutoSpeed();
+		// elevator.setCurrentLimit(40);
+		// elevator.configForAutoSpeed();
 
 		s.enableCompressor(false);
 	}
 
 	public void teleopConfig() {
-		// s.enableCompressor(true);
+		s.enableCompressor(true);
 		swerve.setNominalDriveOutput(0.0);
 		swerve.set10VoltRotationMode(false);
 		// elevator.setCurrentLimit(40);
 		// elevator.configForTeleopSpeed();
 		// wrist.setHighGear(true);
 		// wrist.setAngle(Constants.kWristBallFeedingAngle);
-		// if(diskScorer.hasDisk())
-		// 	diskScorer.conformToState(DiskScorer.State.HOLDING);
+		if(diskScorer.hasDisk())
+			diskScorer.conformToState(DiskScorer.State.HOLDING);
 	}
 
 	@Override
@@ -215,11 +215,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		if(swerve.getState() == Swerve.ControlState.VISION){
-			leds.conformToState(LEDs.State.TARGET_VISIBLE);
-		}else{
-			leds.conformToState(LEDs.State.ENABLED);
-		}
+		// if(swerve.getState() == Swerve.ControlState.VISION){
+		// 	leds.conformToState(LEDs.State.TARGET_VISIBLE);
+		// }else{
+		// 	leds.conformToState(LEDs.State.ENABLED);
+		//}
 		allPeriodic();
 	}
 
@@ -231,7 +231,7 @@ public class Robot extends TimedRobot {
 			teleopConfig();
 			SmartDashboard.putBoolean("Auto", false);
 			robotState.enableXTarget(false);
-			leds.conformToState(LEDs.State.ENABLED);
+			// leds.conformToState(LEDs.State.ENABLED);
 		} catch (Throwable t) {
 			CrashTracker.logThrowableCrash(t);
 			throw t;
@@ -247,24 +247,21 @@ public class Robot extends TimedRobot {
 			driver.update();
 			coDriver.update();
 
-			// if (useSwitchController) {
-			// 	switchController.update();
-			// }
+			if (useSwitchController) {
+				switchController.update();
+			}
 
 			if (oneControllerMode)
 				oneControllerMode();
 			else
 				twoControllerMode();
 
-			if(subsystems.haveEmergency()){
-				leds.conformToState(LEDs.State.EMERGENCY);
-			} else if (swerve.getState() == Swerve.ControlState.VISION){
-				leds.conformToState(LEDs.State.TARGET_TRACKING);
-			} else if(robotState.seesTarget()) {
-				leds.conformToState(LEDs.State.TARGET_VISIBLE);
-			} else {
-				leds.conformToState(LEDs.State.ENABLED);
-			}
+			// if(subsystems.haveEmergency()){
+			// 	leds.conformToState(LEDs.State.EMERGENCY);
+			// } else if (swerve.getState() == Swerve.ControlState.VISION){
+			// 	leds.conformToState(LEDs.State.TARGET_TRACKING);
+			// } else if(robotState.seesTarget()) {
+			// 	leds.conformToState(LEDs.State.TARGET_VISIBLE);
 			// } else if (s.isClimbing()) {
 			// 	leds.conformToState(LEDs.State.CLIMBING);
 			// } else if (diskScorer.hasDisk()) {
@@ -275,6 +272,9 @@ public class Robot extends TimedRobot {
 			// 	leds.conformToState(LEDs.State.BALL_IN_CARRIAGE);
 			// } else if (diskIntake.hasDisk()) {
 			// 	leds.conformToState(LEDs.State.DISK_IN_INTAKE);
+			// } else {
+			// 	leds.conformToState(LEDs.State.ENABLED);
+			// }
 
 			allPeriodic();
 		} catch (Throwable t) {
@@ -330,39 +330,40 @@ public class Robot extends TimedRobot {
 		double swerveXInput = -driver.getY(Hand.kLeft);
 		double swerveRotationInput = (flickRotation ? 0.0 : driver.getX(Hand.kRight));
 
-		// if (useSwitchController) {
-		// 	swerveYInput = switchController.getX(Hand.kLeft);
-		// 	swerveXInput = -switchController.getY(Hand.kLeft);
-		// 	swerveRotationInput = (flickRotation ? 0.0 : switchController.getX(Hand.kRight));
+		if (useSwitchController) {
+			swerveYInput = switchController.getX(Hand.kLeft);
+			swerveXInput = -switchController.getY(Hand.kLeft);
+			swerveRotationInput = (flickRotation ? 0.0 : switchController.getX(Hand.kRight));
 
-		// 	if (switchController.plusButton.wasPressed()) {
+			if (switchController.plusButton.wasPressed()) {
 
-		// 	} else if (switchController.minusButton.wasPressed()) {
-		// 		swerve.temporarilyDisableHeadingController();
-		// 		swerve.zeroSensors(Constants.kRobotLeftStartingPose);
-		// 		swerve.resetAveragedDirection();
-		// 	}
+			} else if (switchController.minusButton.wasPressed()) {
+				swerve.temporarilyDisableHeadingController();
+				swerve.zeroSensors(Constants.kRobotLeftStartingPose);
+				swerve.resetAveragedDirection();
+			}
 
-		// 	if (switchController.xButton.isBeingPressed())
-		// 		swerve.rotate(0);
-		// 	else if (switchController.aButton.isBeingPressed())
-		// 		swerve.rotate(90);
-		// 	else if (switchController.bButton.isBeingPressed())
-		// 		swerve.rotate(180);
-		// 	else if (switchController.yButton.isBeingPressed())
-		// 		swerve.rotate(270);
-		// }
+			if (switchController.xButton.isBeingPressed())
+				swerve.rotate(0);
+			else if (switchController.aButton.isBeingPressed())
+				swerve.rotate(90);
+			else if (switchController.bButton.isBeingPressed())
+				swerve.rotate(180);
+			else if (switchController.yButton.isBeingPressed())
+				swerve.rotate(270);
+		}
 
-		swerve.sendInput(swerveXInput, swerveYInput, swerveRotationInput, robotCentric, driver.leftTrigger.isBeingPressed());
+		//swerve.sendInput(swerveXInput, swerveYInput, swerveRotationInput, robotCentric, driver.leftTrigger.isBeingPressed());  //JNP changed
+		swerve.sendInput(swerveXInput, swerveYInput, swerveRotationInput, true, driver.leftTrigger.isBeingPressed());
 
-		if (driver.rightCenterClick.shortReleased()) {
+		// if (driver.rightCenterClick.shortReleased()) {
 			/*if (flickRotation) {
 				driver.rumble(3, 1);
 			} else {
 				driver.rumble(1, 1);
 			}
 			flickRotation = !flickRotation;*/
-		}
+		// }
 
 		if (flickRotation) {
 			swerve.updateControllerDirection(new Translation2d(-driver.getY(Hand.kRight), driver.getX(Hand.kRight)));
@@ -412,17 +413,17 @@ public class Robot extends TimedRobot {
 		double leftStick = coDriver.getY(Hand.kLeft);
 		double rightStick = coDriver.getY(Hand.kRight);
 
-		if(Math.abs(leftStick) != 0){
-			wrist.setOpenLoop(-leftStick);
-		}else if(wrist.isOpenLoop()){
-			wrist.lockAngle();
-		}
+		// if(Math.abs(leftStick) != 0){
+		// 	wrist.setOpenLoop(-leftStick);
+		// }else if(wrist.isOpenLoop()){
+		// 	wrist.lockAngle();
+		// }
 
-		if(Math.abs(rightStick) != 0){
-			elevator.setOpenLoop(-rightStick);
-		}else if(elevator.isOpenLoop()){
-			elevator.lockHeight();
-		}
+		// if(Math.abs(rightStick) != 0){
+		// 	elevator.setOpenLoop(-rightStick);
+		// }else if(elevator.isOpenLoop()){
+		// 	elevator.lockHeight();
+		//}
 
 		////// Official Controls //////
 
@@ -458,11 +459,11 @@ public class Robot extends TimedRobot {
 				s.fullBallCycleState();
 			} else if (coDriver.leftTrigger.wasActivated()) {
 				if(!swerve.isTracking()){
-					if(elevator.hasReachedTargetHeight()){
-						elevator.setTargetHeight(elevator.nearestVisionHeight(diskScorer.hasDisk() ? Constants.kElevatorDiskVisibleRanges : Constants.kElevatorBallVisibleRanges));
-					}else{
-						elevator.setTargetHeight(elevator.nearestVisionHeight(elevator.getTargetHeight(), diskScorer.hasDisk() ? Constants.kElevatorDiskVisibleRanges : Constants.kElevatorBallVisibleRanges));
-					}
+					// if(elevator.hasReachedTargetHeight()){
+					// 	elevator.setTargetHeight(elevator.nearestVisionHeight(diskScorer.hasDisk() ? Constants.kElevatorDiskVisibleRanges : Constants.kElevatorBallVisibleRanges));
+					// }else{
+					// 	elevator.setTargetHeight(elevator.nearestVisionHeight(elevator.getTargetHeight(), diskScorer.hasDisk() ? Constants.kElevatorDiskVisibleRanges : Constants.kElevatorBallVisibleRanges));
+					// }
 				}
 			} else if (coDriver.xButton.wasActivated()) {
 				if(coDriver.leftTrigger.isBeingPressed()){
@@ -540,37 +541,37 @@ public class Robot extends TimedRobot {
 			
 		}
 
-		if (coDriver.POV0.shortReleased() && !jacks.isAtHeight(-6.0)) {
-			s.climbingState();
-		} else if (coDriver.POV90.shortReleased() && !jacks.isAtHeight(-6.0)) {
-			s.shortClimbingState();
-		} else if (coDriver.POV180.shortReleased()) {
-			s.postClimbingState();
-		} else if (coDriver.POV270.shortReleased()) {
+		// if (coDriver.POV0.shortReleased() && !jacks.isAtHeight(-6.0)) {
+		// 	s.climbingState();
+		// } else if (coDriver.POV90.shortReleased() && !jacks.isAtHeight(-6.0)) {
+		// 	s.shortClimbingState();
+		// } else if (coDriver.POV180.shortReleased()) {
+		// 	s.postClimbingState();
+		// } else if (coDriver.POV270.shortReleased()) {
 			//s.lockedJackState();
-			if(jacks.isAtHeight(-6.0)){
-				s.jackState(Constants.kJackMaxControlHeight);
-			}else{
-				s.jackState(-6.0);
-				wrist.setAngle(Constants.kWristMaxControlAngle);
-			}
-		}
+			// if(jacks.isAtHeight(-6.0)){
+			// 	s.jackState(Constants.kJackMaxControlHeight);
+			// }else{
+			// 	s.jackState(-6.0);
+			// 	wrist.setAngle(Constants.kWristMaxControlAngle);
+			// }
+		// }
 
 		if (diskScorer.needsToNotifyDrivers() || ballCarriage.needsToNotifyDrivers() || swerve.needsToNotifyDrivers()) {
 			driver.rumble(1.0, 2.0);
 			coDriver.rumble(1.0, 2.0);
 		}
 
-		if(coDriver.leftBumper.longPressed()){ 
-			elevator.setManualSpeed(0.5);
-			elevator.enableLimits(false); 
-			coDriver.rumble(1.0, 1.0); 
-		}else if(!elevator.limitsEnabled() && coDriver.leftBumper.longReleased()){
-			elevator.zeroSensors(); 
-			elevator.enableLimits(true);
-			elevator.setManualSpeed(Constants.kElevatorTeleopManualSpeed);
-			elevator.lockHeight(); 
-		} 
+		// if(coDriver.leftBumper.longPressed()){ 
+			// elevator.setManualSpeed(0.5);
+			// elevator.enableLimits(false); 
+		// 	coDriver.rumble(1.0, 1.0); 
+		// }else if(!elevator.limitsEnabled() && coDriver.leftBumper.longReleased()){
+		// 	elevator.zeroSensors(); 
+		// 	elevator.enableLimits(true);
+		// 	elevator.setManualSpeed(Constants.kElevatorTeleopManualSpeed);
+		// 	elevator.lockHeight(); 
+		// } 
 	}
 
 	private void oneControllerMode() {

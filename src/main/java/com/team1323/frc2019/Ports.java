@@ -2,14 +2,15 @@ package com.team1323.frc2019;
 
 public class Ports {
 	//Talons 
-	public static final int FRONT_RIGHT_ROTATION= 7; 
-    public static final int FRONT_RIGHT_DRIVE   = 3; 
-    public static final int FRONT_LEFT_ROTATION = 8;
-    public static final int FRONT_LEFT_DRIVE    = 12; 
-    public static final int REAR_LEFT_ROTATION  = 11;
-    public static final int REAR_LEFT_DRIVE     = 15;
-    public static final int REAR_RIGHT_ROTATION = 4;
-    public static final int REAR_RIGHT_DRIVE    = 0;
+    public static final int FRONT_RIGHT_DRIVE   = 11; // JNP
+    public static final int FRONT_LEFT_DRIVE    = 12; // JNP
+    public static final int REAR_LEFT_DRIVE     = 13; // JNP
+    public static final int REAR_RIGHT_DRIVE    = 14; // JNP
+
+	public static final int FRONT_RIGHT_ROTATION= 15; // JNP
+    public static final int FRONT_LEFT_ROTATION = 16; // JNP
+    public static final int REAR_LEFT_ROTATION  = 17; // JNP
+    public static final int REAR_RIGHT_ROTATION = 18; // JNP
     
     public static final int ELEVATOR_1 = 2;
     public static final int ELEVATOR_2 = 13;
@@ -25,7 +26,8 @@ public class Ports {
     
     public static final int WRIST = 1;
     
-    public static final int PIGEON_TALON = 6;
+    // public static final int PIGEON_TALON = 6;  JNP
+    public static final int PIGEON = 0; // JNP
     
     //PCM's
     public static final int DRIVEBASE_PCM = 20;

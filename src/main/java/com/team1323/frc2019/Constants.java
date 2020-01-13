@@ -19,15 +19,15 @@ public class Constants {
 	public static final boolean kIsUsingCompBot = true;
 	public static final boolean kIsUsingTractionWheels = true;
 
-	public static final boolean kDebuggingOutput = false;
+	public static final boolean kDebuggingOutput = true;   //JNP changed was true
 	
 	//Physical Robot Dimensions (including bumpers)
-	public static final double kRobotWidth = 36.5;
-	public static final double kRobotLength = 36.5;
+	public static final double kRobotWidth = 24;
+	public static final double kRobotLength = 24;
 	public static final double kRobotHalfWidth = kRobotWidth / 2.0;
 	public static final double kRobotHalfLength = kRobotLength / 2.0;
+	
 	public static final double kRobotProbeExtrusion = 4.0;
-
 	public static final double kBallRadius = 6.5;
 	
 	//Field Landmarks
@@ -44,6 +44,7 @@ public class Constants {
 
 	public static final double kDiskTargetHeight = 28.625;//28.1875
 	public static final double kBallTargetHeight = 36.9375;
+
 	public static final List<Rotation2d> kPossibleDiskTargetAngles = Arrays.asList(/*Rotation2d.fromDegrees(0.0),*/ Rotation2d.fromDegrees(30.0),
 		Rotation2d.fromDegrees(150.0), /*Rotation2d.fromDegrees(180.0),*/ Rotation2d.fromDegrees(-150.0),
 		Rotation2d.fromDegrees(-30.0));
@@ -58,12 +59,12 @@ public class Constants {
 	//public static final Pose2d kRobotRightRampExitPose = new Pose2d(new Translation2d(48.0 + kRobotHalfLength, 75.25 + kRobotHalfWidth), Rotation2d.fromDegrees(0));
 	
 	//Swerve Calculations Constants (measurements are in inches)
-    public static final double kWheelbaseLength = 21.0;
-    public static final double kWheelbaseWidth  = 21.0;
+    public static final double kWheelbaseLength = 17.5;
+    public static final double kWheelbaseWidth  = 17.5;
     public static final double kSwerveDiagonal = Math.hypot(kWheelbaseLength, kWheelbaseWidth);
     
     //Camera Constants
-    public static final double kCameraYOffset = 0.25;//0.25
+    public static final double kCameraYOffset = 0.25;
     public static final double kCameraXOffset = kRobotHalfLength - 15.0;
     public static final double kCameraZOffset = 16.45;
     public static final double kCameraYawAngleDegrees = 0.0;//-12.7
@@ -102,12 +103,17 @@ public class Constants {
 	public static final double kSwerveRotation10VoltMaxSpeed = 1350.0;
     public static final double kSwerveRotationSpeedScalar = ((1.0 / 0.125) - 1.0) / kSwerveMaxSpeedInchesPerSecond;
     
-    //Swerve Module Wheel Offsets (Rotation encoder values when the wheels are facing 0 degrees)
-	public static final int kFrontRightEncoderStartingPos = kIsUsingCompBot ? -1403 - 1024 : 1740 - 1024;
-	public static final int kFrontLeftEncoderStartingPos = kIsUsingCompBot ? -2171 - 1024 : -2895 - 1024;
-	public static final int kRearLeftEncoderStartingPos = kIsUsingCompBot ? -1327 - 1024 : -2639 - 1024;
-	public static final int kRearRightEncoderStartingPos = kIsUsingCompBot ? -5953 - 1024 : 975 - 1024;
-	
+//Swerve Module Wheel Offsets (Rotation encoder values when the wheels are facing 0 degrees)
+//  public static final int kFrontLeftEncoderStartingPos = kIsUsingCompBot  ? -2171 - 1024 : -2895 - 1024;
+//  public static final int kFrontRightEncoderStartingPos = kIsUsingCompBot ? -1403 - 1024 :  1740 - 1024;
+//  public static final int kRearLeftEncoderStartingPos = kIsUsingCompBot   ? -1327 - 1024 : -2639 - 1024;
+//  public static final int kRearRightEncoderStartingPos = kIsUsingCompBot  ? -5953 - 1024 :   975 - 1024;
+
+	public static final int kFrontLeftEncoderStartingPos  = 1478+2048; // mod 0   1478 JNP
+	public static final int kFrontRightEncoderStartingPos = 1451+2048; // mod 1   1451 JNP
+	public static final int kRearLeftEncoderStartingPos   = 2600-2048; // mod 2   2600 JNP
+	public static final int kRearRightEncoderStartingPos  = 550+2048;  // mod 3    500 JNP
+
 	//Swerve Module Positions (relative to the center of the drive base)
 	public static final Translation2d kVehicleToModuleZero = new Translation2d(kWheelbaseLength/2, kWheelbaseWidth/2);
 	public static final Translation2d kVehicleToModuleOne = new Translation2d(kWheelbaseLength/2, -kWheelbaseWidth/2);
@@ -134,8 +140,9 @@ public class Constants {
 	//Swerve Odometry Constants
 	public static final double kSwerveWheelDiameter = 4.0901; //inches (actual diamter is closer to 3.87, but secondary algorithm prefers 4.0901) 3.76
 	public static final double kSwerveDriveEncoderResolution = 4096.0;
+
 	/** The number of rotations the swerve drive encoder undergoes for every rotation of the wheel. */
-	public static final double kSwerveEncoderToWheelRatio = 6.0;
+	public static final double kSwerveEncoderToWheelRatio = 1.0; //6.0 JNP
 	public static final double kSwerveEncUnitsPerWheelRev = kSwerveDriveEncoderResolution * kSwerveEncoderToWheelRatio;
 	public static final double kSwerveEncUnitsPerInch = kSwerveEncUnitsPerWheelRev / (Math.PI * kSwerveWheelDiameter);
 	

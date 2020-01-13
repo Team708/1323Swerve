@@ -2,6 +2,7 @@ package com.team1323.frc2019.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.PigeonState;
+import com.team1323.frc2019.Ports;
 import com.team254.lib.geometry.Rotation2d;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,7 +20,8 @@ public class Pigeon {
     
 	private Pigeon(){
 		try{
-			pigeon = new PigeonIMU(BallIntake.getInstance().getPigeonTalon());
+			// pigeon = new PigeonIMU(BallIntake.getInstance().getPigeonTalon());  JNP
+			pigeon = new PigeonIMU(Ports.PIGEON);
 		}catch(Exception e){
 			System.out.println(e);
 		}
